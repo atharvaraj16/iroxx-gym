@@ -317,15 +317,15 @@
   .metric:first-child{border-left:none;}
   .metric-label{font-size:12px;color:var(--grey);letter-spacing:0.05em;margin-bottom:14px;}
   .metric-value{
-    font-family:'Space Grotesk';font-size:clamp(26px,2.5vw,40px);font-weight:600;
-    line-height:1.1;hyphens:none;word-break:normal;
-    display:flex;align-items:baseline;gap:5px;
+    font-family:'Space Grotesk';font-size:clamp(22px,2.2vw,36px);font-weight:600;
+    line-height:1.15;hyphens:none;
+    display:flex;align-items:baseline;flex-wrap:nowrap;gap:5px;
+    white-space:nowrap;
   }
-  .metric-value--split{
-    flex-direction:column;align-items:flex-start;gap:4px;
+  .metric-value .unit{
+    font-size:14px;color:var(--grey);font-weight:400;
+    white-space:nowrap;flex-shrink:0;
   }
-  .metric-value-main{display:block;}
-  .metric-value .unit{font-size:14px;color:var(--grey);font-weight:400;line-height:1.35;}
   .metric-bar{height:3px;background:var(--gunmetal);border-radius:3px;margin-top:16px;overflow:hidden;}
   .metric-bar span{display:block;height:100%;width:0%;border-radius:3px;
     background:linear-gradient(90deg,var(--blue),var(--violet));
@@ -1898,33 +1898,22 @@ body.nav-scrolled .hero{
     <div class="metrics-grid">
       <div class="metric">
         <div class="metric-label">OVERALL RATING</div>
-        <div class="metric-value">
-          <span class="metric-value-main">4.8</span><span class="unit">/ 5</span>
-        </div>
+        <div class="metric-value">4.8<span class="unit">/ 5</span></div>
         <div class="metric-bar"><span data-w="96"></span></div>
       </div>
       <div class="metric">
         <div class="metric-label">EQUIPMENT QUALITY</div>
-        <div class="metric-value metric-value--split">
-          <span class="metric-value-main">Modern</span>
-          <span class="unit">& maintained</span>
-        </div>
+        <div class="metric-value">Modern<span class="unit">& maintained</span></div>
         <div class="metric-bar"><span data-w="90"></span></div>
       </div>
       <div class="metric">
         <div class="metric-label">TRAINER SUPPORT</div>
-        <div class="metric-value metric-value--split">
-          <span class="metric-value-main">Hands-on</span>
-          <span class="unit">coaching</span>
-        </div>
+        <div class="metric-value">Hands-on<span class="unit"> coaching</span></div>
         <div class="metric-bar"><span data-w="94"></span></div>
       </div>
       <div class="metric">
         <div class="metric-label">ATMOSPHERE</div>
-        <div class="metric-value metric-value--split">
-          <span class="metric-value-main">Unisex</span>
-          <span class="unit">& spacious</span>
-        </div>
+        <div class="metric-value">Unisex<span class="unit">& spacious</span></div>
         <div class="metric-bar"><span data-w="88"></span></div>
       </div>
     </div>
