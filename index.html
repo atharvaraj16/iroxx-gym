@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IROXX GYM — Kamothe, Panvel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --obsidian:#050608;
+    --graphite:#0e1116;
+    --gunmetal:#191d24;
+    --line:#242933;
+    --blue:#3d6bff;
+    --violet:#8a5cff;
+    --lime:#c6ff5e;
+    --white:#f2f4f8;
+    --grey:#8891a3;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--obsidian);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--blue);color:#fff;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed;top:22px;left:50%;transform:translateX(-50%);
+    z-index:100;
+    display:flex;align-items:center;gap:36px;
+    padding:14px 26px;
+    background:rgba(14,17,22,0.55);
+    border:1px solid var(--line);
+    border-radius:100px;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    transition:padding .4s ease, top .4s ease, background .4s ease;
+    width:min(920px,92vw);
+    justify-content:space-between;
+  }
+  .nav.scrolled{top:14px;padding:10px 22px;background:rgba(8,10,13,0.78);}
+  .nav-inner{display:flex;align-items:center;gap:36px;}
+  .brand{font-weight:700;font-size:15px;letter-spacing:0.02em;display:flex;align-items:center;gap:8px;}
+  .brand-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px var(--lime);flex-shrink:0;}
+  .nav-links{display:flex;gap:28px;list-style:none;}
+  .nav-links li a{
+    font-size:13px;color:var(--grey);font-weight:500;letter-spacing:0.01em;
+    position:relative;padding-bottom:3px;transition:color .25s ease;
+  }
+  .nav-links li a::after{
+    content:"";position:absolute;left:0;bottom:0;height:1px;width:0%;
+    background:var(--blue);transition:width .3s ease;
+  }
+  .nav-links li a:hover{color:var(--white);}
+  .nav-links li a:hover::after{width:100%;}
+  .nav-cta{
+    font-size:12px;font-weight:600;padding:9px 18px;border-radius:100px;
+    background:var(--white);color:var(--obsidian);letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  @media (max-width:860px){ .nav-links{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;height:100svh;min-height:640px;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    overflow:hidden;
+  }
+
+  /* Premium hero atmosphere */
+
+.hero{
+  background:
+    radial-gradient(
+      circle at 68% 45%,
+      rgba(61,107,255,.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 75% 55%,
+      rgba(138,92,255,.08),
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      #050608 0%,
+      #080b10 55%,
+      #050608 100%
+    );
+}
+  #hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;}
+  .hero-vignette{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% 100%, rgba(5,6,8,0) 0%, rgba(5,6,8,0.9) 70%),
+      linear-gradient(180deg, rgba(5,6,8,0.55) 0%, rgba(5,6,8,0.1) 22%, rgba(5,6,8,0.1) 60%, rgba(5,6,8,1) 100%);
+  }
+  .hero-content{
+    position:relative;z-index:3;
+    padding:0 6vw 8vh;
+    display:flex;flex-direction:column;gap:22px;
+  }
+  .hero-eyebrow{
+    font-size:12px;color:var(--grey);letter-spacing:0.06em;
+    display:flex;align-items:center;gap:10px;
+    opacity:0;transform:translateY(10px);
+    animation:rise .9s cubic-bezier(.19,1,.22,1) .2s forwards;
+  }
+  .hero-eyebrow .rating{color:var(--lime);font-weight:600;}
+  .hero-title{
+    font-size:clamp(48px,9.5vw,132px);
+    font-weight:700;line-height:0.94;letter-spacing:-0.02em;
+    text-transform:uppercase;
+  }
+  .hero-title .line{
+    display:block;overflow:hidden;
+  }
+  .hero-title .line span{
+    display:block;
+    opacity:0;transform:translateY(100%);
+    animation:rise .9s cubic-bezier(.19,1,.22,1) forwards;
+  }
+  .hero-title .line:nth-child(1) span{animation-delay:.35s;}
+  .hero-title .line:nth-child(2) span{
+    animation-delay:.48s;
+    background:linear-gradient(100deg,var(--blue) 10%, var(--violet) 55%, var(--lime) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  @keyframes rise{to{opacity:1;transform:translateY(0);}}
+  .hero-sub{
+    max-width:480px;font-size:16px;color:var(--grey);line-height:1.6;
+    opacity:0;animation:rise .9s cubic-bezier(.19,1,.22,1) .65s forwards;
+  }
+  .hero-actions{
+    display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    opacity:0;animation:rise .9s cubic-bezier(.19,1,.22,1) .8s forwards;
+  }
+  .btn-primary{
+    background:var(--white);color:var(--obsidian);
+    padding:15px 26px;border-radius:100px;font-weight:600;font-size:14px;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .3s cubic-bezier(.19,1,.22,1), box-shadow .3s ease;
+    box-shadow:0 0 0 0 rgba(61,107,255,0);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 34px -10px rgba(61,107,255,0.55);}
+  .btn-ghost{
+    border:1px solid var(--line);color:var(--white);
+    padding:14px 25px;border-radius:100px;font-weight:500;font-size:14px;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  .btn-ghost:hover{border-color:var(--blue);background:rgba(61,107,255,0.08);}
+  .scroll-cue{
+    position:absolute;bottom:28px;right:6vw;z-index:3;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    color:var(--grey);font-size:11px;letter-spacing:0.08em;
+  }
+  .scroll-cue .bar{width:1px;height:36px;background:linear-gradient(var(--grey),transparent);
+    animation:scrollpulse 1.8s ease-in-out infinite;}
+  @keyframes scrollpulse{0%,100%{opacity:.25;}50%{opacity:1;}}
+
+  /* ---------- GENERAL SECTION ---------- */
+  section{position:relative;padding:150px 6vw;}
+  .section-head{
+    display:grid;grid-template-columns:1fr 1fr;gap:60px;
+    margin-bottom:80px;align-items:end;
+  }
+  .kicker{font-size:12px;color:var(--blue);font-weight:600;letter-spacing:0.03em;margin-bottom:16px;display:block;}
+  .section-head h2{font-size:clamp(30px,4vw,52px);line-height:1.08;font-weight:600;letter-spacing:-0.01em;}
+  .section-head p{color:var(--grey);font-size:16px;line-height:1.7;}
+  @media (max-width:820px){ .section-head{grid-template-columns:1fr;gap:22px;} section{padding:100px 6vw;} }
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.19,1,.22,1), transform .8s cubic-bezier(.19,1,.22,1);}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- STANDARD / METRICS ---------- */
+  .metrics-panel{
+    border:1px solid var(--line);border-radius:20px;
+    background:linear-gradient(160deg, var(--graphite) 0%, var(--obsidian) 100%);
+    padding:52px;position:relative;overflow:hidden;
+  }
+  .metrics-panel::before{
+    content:"";position:absolute;top:-40%;right:-20%;width:60%;height:180%;
+    background:radial-gradient(circle, rgba(61,107,255,0.12), transparent 65%);
+    pointer-events:none;
+  }
+  .metrics-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:0;position:relative;z-index:1;
+  }
+  .metric{padding:22px 26px;border-left:1px solid var(--line);}
+  .metric:first-child{border-left:none;}
+  .metric-label{font-size:12px;color:var(--grey);letter-spacing:0.05em;margin-bottom:14px;}
+  .metric-value{font-family:'Space Grotesk';font-size:clamp(30px,3.4vw,44px);font-weight:600;display:flex;align-items:baseline;gap:4px;}
+  .metric-value .unit{font-size:14px;color:var(--grey);font-weight:400;}
+  .metric-bar{height:3px;background:var(--gunmetal);border-radius:3px;margin-top:16px;overflow:hidden;}
+  .metric-bar span{display:block;height:100%;width:0%;border-radius:3px;
+    background:linear-gradient(90deg,var(--blue),var(--violet));
+    transition:width 1.4s cubic-bezier(.19,1,.22,1);}
+  @media (max-width:700px){ .metric{border-left:none;border-top:1px solid var(--line);} .metric:first-child{border-top:none;} .metrics-panel{padding:32px 24px;} }
+
+  .tag-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:36px;}
+  .tag{
+    font-size:12.5px;color:var(--white);border:1px solid var(--line);
+    padding:9px 16px;border-radius:100px;background:var(--graphite);
+    display:flex;align-items:center;gap:8px;
+  }
+  .tag b{color:var(--lime);font-weight:600;}
+
+  /* ---------- TRAINING MODULES ---------- */
+  .modules{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:980px){ .modules{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .modules{grid-template-columns:1fr;} }
+  .module{
+    border:1px solid var(--line);border-radius:18px;padding:30px 26px;
+    background:var(--graphite);position:relative;overflow:hidden;
+    min-height:220px;display:flex;flex-direction:column;justify-content:space-between;
+    transition:border-color .4s ease, transform .4s cubic-bezier(.19,1,.22,1), background .4s ease;
+  }
+  .module::before{
+    content:"";position:absolute;inset:0;opacity:0;transition:opacity .5s ease;
+    background:radial-gradient(circle at 30% 20%, rgba(138,92,255,0.22), transparent 60%);
+  }
+  .module:hover{transform:translateY(-6px);border-color:var(--blue);}
+  .module:hover::before{opacity:1;}
+  .module-index{font-family:'Space Grotesk';font-size:13px;color:var(--grey);letter-spacing:0.05em;position:relative;z-index:1;}
+  .module-name{font-family:'Space Grotesk';font-size:23px;font-weight:600;margin-top:auto;position:relative;z-index:1;}
+  .module-desc{font-size:13.5px;color:var(--grey);margin-top:8px;position:relative;z-index:1;line-height:1.55;}
+
+  /* ---------- FACILITY ---------- */
+  .facility-strip{
+    display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  }
+  @media (max-width:900px){ .facility-strip{grid-template-columns:1fr 1fr;} }
+  @media (max-width:560px){ .facility-strip{grid-template-columns:1fr;} }
+  .zone{
+    padding:34px 22px;border-left:1px solid var(--line);min-height:230px;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+    background:var(--graphite);position:relative;
+    transition:background .4s ease;
+  }
+  .zone:first-child{border-left:none;}
+  .zone:hover{background:var(--gunmetal);}
+  .zone-glyph{
+    width:34px;height:34px;border-radius:9px;border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;margin-bottom:auto;
+    font-family:'Space Grotesk';font-size:12px;color:var(--blue);
+  }
+  .zone-name{font-family:'Space Grotesk';font-weight:600;font-size:16px;}
+  .zone-desc{font-size:12.5px;color:var(--grey);line-height:1.5;}
+  @media (max-width:900px){ .zone:nth-child(3){border-left:none;} }
+  @media (max-width:560px){ .zone{border-left:none !important;border-top:1px solid var(--line);} .zone:first-child{border-top:none;} }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testimonial-rail{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  @media (max-width:900px){ .testimonial-rail{grid-template-columns:1fr;} }
+  .t-card{
+    border:1px solid var(--line);border-radius:18px;padding:30px;background:var(--graphite);
+    display:flex;flex-direction:column;gap:20px;justify-content:space-between;
+  }
+  .t-stars{color:var(--lime);font-size:14px;letter-spacing:2px;}
+  .t-text{font-size:15px;line-height:1.65;color:#dfe3ea;}
+  .t-foot{display:flex;align-items:center;gap:12px;}
+  .t-avatar{
+    width:36px;height:36px;border-radius:50%;
+    background:linear-gradient(135deg,var(--blue),var(--violet));
+    display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-weight:600;font-size:13px;
+  }
+  .t-name{font-size:13.5px;font-weight:600;}
+  .t-role{font-size:12px;color:var(--grey);}
+
+  /* ---------- MEMBERSHIP ---------- */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch;}
+  @media (max-width:900px){ .plans{grid-template-columns:1fr;} }
+  .plan{
+    border:1px solid var(--line);border-radius:20px;padding:38px 30px;
+    display:flex;flex-direction:column;gap:24px;background:var(--graphite);
+  }
+  .plan.featured{
+    background:linear-gradient(180deg, #14161c 0%, var(--obsidian) 100%);
+    border-color:var(--violet);position:relative;
+    box-shadow:0 0 60px -20px rgba(138,92,255,0.35);
+  }
+  .plan.featured::after{
+    content:"MOST CHOSEN";position:absolute;top:22px;right:26px;
+    font-size:10.5px;letter-spacing:0.06em;color:var(--violet);font-weight:600;
+  }
+  .plan-name{font-family:'Space Grotesk';font-size:22px;font-weight:600;}
+  .plan-note{font-size:13px;color:var(--grey);line-height:1.5;}
+  .plan-list{list-style:none;display:flex;flex-direction:column;gap:12px;font-size:14px;color:#dfe3ea;flex-grow:1;}
+  .plan-list li{display:flex;gap:10px;align-items:flex-start;}
+  .plan-list li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--blue);margin-top:8px;flex-shrink:0;}
+  .plan .btn-ghost, .plan .btn-primary{text-align:center;justify-content:center;}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{
+    text-align:center;padding:170px 6vw;position:relative;overflow:hidden;
+  }
+  .final-orb{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:520px;height:520px;border-radius:50%;
+    background:radial-gradient(circle, rgba(61,107,255,0.28), rgba(138,92,255,0.12) 45%, transparent 70%);
+    filter:blur(10px);pointer-events:none;
+    animation:orbpulse 6s ease-in-out infinite;
+  }
+  @keyframes orbpulse{0%,100%{opacity:.7;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.08);}}
+  .final h2{position:relative;font-size:clamp(38px,7vw,84px);line-height:1;font-weight:700;letter-spacing:-0.02em;text-transform:uppercase;}
+  .final p{position:relative;color:var(--grey);margin:26px auto 40px;max-width:440px;font-size:15.5px;}
+  .final .btn-primary{position:relative;margin:0 auto;}
+
+  /* ---------- CONTACT ---------- */
+  .contact-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:18px;}
+  @media (max-width:900px){ .contact-grid{grid-template-columns:1fr;} }
+  .map-panel{
+    border:1px solid var(--line);border-radius:20px;overflow:hidden;min-height:380px;
+  }
+  .map-panel iframe{width:100%;height:100%;min-height:380px;border:0;filter:grayscale(0.4) invert(0.92) contrast(0.9);}
+  .info-panel{
+    border:1px solid var(--line);border-radius:20px;padding:38px;background:var(--graphite);
+    display:flex;flex-direction:column;gap:26px;
+  }
+  .info-row{display:flex;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--line);}
+  .info-row:last-of-type{border-bottom:none;padding-bottom:0;}
+  .info-label{font-size:12px;color:var(--grey);letter-spacing:0.04em;margin-bottom:8px;}
+  .info-value{font-size:15px;font-weight:500;line-height:1.5;}
+  .status-live{display:inline-flex;align-items:center;gap:8px;color:var(--lime);font-size:13px;font-weight:600;}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line);padding:60px 6vw 34px;}
+  .footer-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;padding-bottom:44px;}
+  .footer-brand{font-family:'Space Grotesk';font-weight:700;font-size:20px;}
+  .footer-tag{color:var(--grey);font-size:14px;margin-top:10px;max-width:280px;line-height:1.6;}
+  .footer-cols{display:flex;gap:70px;flex-wrap:wrap;}
+  .footer-col h4{font-size:12px;color:var(--grey);letter-spacing:0.05em;margin-bottom:16px;}
+  .footer-col a{display:block;font-size:14px;color:#dfe3ea;margin-bottom:10px;}
+  .footer-bottom{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:26px;border-top:1px solid var(--line);font-size:12.5px;color:var(--grey);}
+
+/* =========================================================
+   RESPONSIVE FIXES — TABLET + MOBILE
+   ========================================================= */
+
+/* ---------- TABLETS ---------- */
+@media (max-width: 1024px){
+
+  .nav{
+    width:94vw;
+    gap:20px;
+    padding:13px 20px;
+  }
+
+  .nav-inner{
+    gap:20px;
+  }
+
+  .nav-links{
+    gap:18px;
+  }
+
+  .hero-content{
+    padding-left:5vw;
+    padding-right:5vw;
+    padding-bottom:7vh;
+  }
+
+  .hero-title{
+    font-size:clamp(52px, 10vw, 100px);
+  }
+
+  section{
+    padding-left:5vw;
+    padding-right:5vw;
+  }
+
+  .metrics-panel{
+    padding:40px;
+  }
+
+  .metric{
+    padding:20px;
+  }
+
+  .plans{
+    gap:14px;
+  }
+
+  .plan{
+    padding:32px 24px;
+  }
+
+}
+
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 640px){
+
+  /* NAVIGATION */
+  .nav{
+    top:12px;
+    width:calc(100vw - 24px);
+    padding:11px 15px;
+    gap:10px;
+  }
+
+  .nav.scrolled{
+    top:8px;
+    padding:9px 15px;
+  }
+
+  .brand{
+    font-size:13px;
+  }
+
+  .brand-dot{
+    width:6px;
+    height:6px;
+  }
+
+  .nav-cta{
+    font-size:11px;
+    padding:8px 13px;
+  }
+
+
+  /* HERO */
+  .hero{
+    min-height:680px;
+  }
+
+  .hero-content{
+    padding:0 20px 70px;
+    gap:18px;
+  }
+
+  .hero-eyebrow{
+    font-size:10px;
+    line-height:1.5;
+    flex-wrap:wrap;
+  }
+
+  .hero-title{
+    font-size:clamp(42px, 14vw, 72px);
+    line-height:.92;
+    letter-spacing:-.03em;
+  }
+
+  .hero-sub{
+    font-size:14px;
+    line-height:1.55;
+    max-width:100%;
+  }
+
+  .hero-actions{
+    width:100%;
+    gap:10px;
+  }
+
+  .hero-actions a{
+    flex:1;
+    justify-content:center;
+    text-align:center;
+    white-space:nowrap;
+  }
+
+  .btn-primary,
+  .btn-ghost{
+    padding:13px 16px;
+    font-size:13px;
+  }
+
+  .scroll-cue{
+    display:none;
+  }
+
+
+  /* GENERAL SECTIONS */
+  section{
+    padding:80px 20px;
+  }
+
+  .section-head{
+    display:block;
+    margin-bottom:45px;
+  }
+
+  .section-head h2{
+    font-size:clamp(28px, 8vw, 40px);
+    line-height:1.08;
+    margin-bottom:20px;
+  }
+
+  .section-head p{
+    font-size:14px;
+    line-height:1.6;
+  }
+
+  .kicker{
+    font-size:11px;
+    margin-bottom:12px;
+  }
+
+
+  /* METRICS */
+  .metrics-panel{
+    padding:25px 20px;
+    border-radius:16px;
+  }
+
+  .metrics-grid{
+    grid-template-columns:1fr;
+  }
+
+  .metric{
+    padding:20px 0;
+  }
+
+  .metric-value{
+    font-size:30px;
+  }
+
+  .metric-label{
+    font-size:10px;
+  }
+
+  .tag-row{
+    gap:8px;
+    margin-top:25px;
+  }
+
+  .tag{
+    font-size:11px;
+    padding:8px 12px;
+  }
+
+
+  /* TRAINING MODULES */
+  .modules{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .module{
+    min-height:190px;
+    padding:25px 20px;
+    border-radius:15px;
+  }
+
+  .module-name{
+    font-size:21px;
+  }
+
+  .module-desc{
+    font-size:13px;
+  }
+
+
+  /* FACILITY */
+  .facility-strip{
+    grid-template-columns:1fr;
+    border-radius:16px;
+  }
+
+  .zone{
+    min-height:180px;
+    padding:25px 20px;
+    border-left:none !important;
+    border-top:1px solid var(--line);
+  }
+
+  .zone:first-child{
+    border-top:none;
+  }
+
+
+  /* TESTIMONIALS */
+  .testimonial-rail{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .t-card{
+    padding:24px 20px;
+    border-radius:15px;
+  }
+
+  .t-text{
+    font-size:14px;
+  }
+
+
+  /* MEMBERSHIP */
+  .plans{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .plan{
+    padding:30px 22px;
+    border-radius:16px;
+  }
+
+  .plan.featured::after{
+    top:18px;
+    right:20px;
+    font-size:9px;
+  }
+
+  .plan-name{
+    font-size:21px;
+  }
+
+  .plan-list{
+    font-size:13px;
+  }
+
+
+  /* CONTACT */
+  .contact-grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .map-panel{
+    min-height:300px;
+    border-radius:16px;
+  }
+
+  .map-panel iframe{
+    min-height:300px;
+  }
+
+  .info-panel{
+    padding:25px 20px;
+    border-radius:16px;
+  }
+
+  .info-row{
+    display:block;
+    padding-bottom:18px;
+  }
+
+  .info-value{
+    font-size:14px;
+  }
+
+
+  /* FINAL CTA */
+  .final{
+    padding:100px 20px;
+  }
+
+  .final-orb{
+    width:320px;
+    height:320px;
+  }
+
+  .final h2{
+    font-size:clamp(38px, 12vw, 60px);
+  }
+
+  .final p{
+    font-size:14px;
+    line-height:1.6;
+    margin:22px auto 30px;
+  }
+
+
+  /* FOOTER */
+  footer{
+    padding:45px 20px 25px;
+  }
+
+  .footer-top{
+    display:block;
+    padding-bottom:30px;
+  }
+
+  .footer-cols{
+    margin-top:35px;
+    gap:35px;
+  }
+
+  .footer-col a{
+    font-size:13px;
+  }
+
+  .footer-bottom{
+    display:block;
+    line-height:1.8;
+  }
+}
+
+
+/* ---------- VERY SMALL PHONES ---------- */
+@media (max-width: 380px){
+
+  .hero{
+    min-height:650px;
+  }
+
+  .hero-content{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .hero-title{
+    font-size:40px;
+  }
+
+  .hero-actions{
+    flex-direction:column;
+  }
+
+  .hero-actions a{
+    width:100%;
+  }
+
+  section{
+    padding-left:16px;
+    padding-right:16px;
+  }
+
+  .section-head h2{
+    font-size:28px;
+  }
+
+  .final h2{
+    font-size:36px;
+  }
+
+}
+
+/* ---------- MOBILE NAVIGATION ---------- */
+
+.nav-right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.menu-toggle{
+  display:none;
+  width:38px;
+  height:38px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:var(--graphite);
+  cursor:pointer;
+  padding:9px;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+}
+
+.menu-toggle span{
+  display:block;
+  width:16px;
+  height:1.5px;
+  background:var(--white);
+  transition:transform .3s ease, opacity .3s ease;
+}
+
+
+/* Tablet + Mobile */
+@media (max-width:860px){
+
+  .nav{
+    position:fixed;
+  }
+
+  .nav-right{
+    margin-left:auto;
+  }
+
+  .menu-toggle{
+    display:flex;
+  }
+
+  .nav-links{
+    display:none;
+    position:absolute;
+    top:calc(100% + 10px);
+    left:0;
+    width:100%;
+    flex-direction:column;
+    gap:0;
+    padding:8px;
+    background:rgba(14,17,22,.96);
+    border:1px solid var(--line);
+    border-radius:18px;
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+  }
+
+  .nav-links.active{
+    display:flex;
+  }
+
+  .nav-links li{
+    width:100%;
+  }
+
+  .nav-links li a{
+    display:block;
+    width:100%;
+    padding:13px 14px;
+    font-size:13px;
+    border-radius:10px;
+  }
+
+  .nav-links li a:hover{
+    background:var(--gunmetal);
+  }
+
+}
+
+
+/* Small phones */
+@media (max-width:480px){
+
+  .nav{
+    width:calc(100vw - 24px);
+  }
+
+  .nav-cta{
+    padding:8px 12px;
+  }
+
+}
+
+/* =========================================================
+   PREMIUM VISUAL LAYER
+   ========================================================= */
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+  opacity:.035;
+  background-image:
+    linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:linear-gradient(to bottom,black,transparent 85%);
+  -webkit-mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:9998;
+  background:radial-gradient(
+    circle,
+    rgba(61,107,255,.07),
+    transparent 70%
+  );
+  transform:translate(-50%,-50%);
+  left:var(--mouse-x,50%);
+  top:var(--mouse-y,50%);
+  transition:left .15s ease-out,top .15s ease-out;
+}
+
+/* ---------- PREMIUM CARDS ---------- */
+
+.module,
+.plan,
+.t-card,
+.zone,
+.metrics-panel,
+.info-panel{
+  position:relative;
+  isolation:isolate;
+}
+
+.module::after,
+.plan::after,
+.t-card::after,
+.zone::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  opacity:0;
+  background:
+    radial-gradient(
+      500px circle at var(--card-x,50%) var(--card-y,50%),
+      rgba(61,107,255,.13),
+      transparent 45%
+    );
+  transition:opacity .35s ease;
+  z-index:-1;
+}
+
+.module:hover::after,
+.plan:hover::after,
+.t-card:hover::after,
+.zone:hover::after{
+  opacity:1;
+}
+
+.module:hover,
+.plan:hover,
+.t-card:hover{
+  box-shadow:
+    0 20px 60px -30px rgba(0,0,0,.9),
+    0 0 35px -25px rgba(61,107,255,.6);
+}
+
+/* ---------- WHY IROXX ---------- */
+
+.why-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+}
+
+.why-card{
+  min-height:300px;
+  padding:28px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25,29,36,.9),
+      rgba(5,6,8,.95)
+    );
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
+  transition:
+    transform .4s cubic-bezier(.19,1,.22,1),
+    border-color .3s ease,
+    box-shadow .4s ease;
+}
+
+.why-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(61,107,255,.6);
+}
+
+.why-number{
+  font-family:'Space Grotesk';
+  color:var(--grey);
+  font-size:12px;
+  letter-spacing:.08em;
+}
+
+.why-icon{
+  width:48px;
+  height:48px;
+  margin-top:auto;
+  margin-bottom:28px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Space Grotesk';
+  font-size:20px;
+  color:var(--lime);
+  background:rgba(255,255,255,.02);
+}
+
+.why-card h3{
+  font-size:21px;
+  margin-bottom:10px;
+}
+
+.why-card p{
+  color:var(--grey);
+  font-size:13.5px;
+  line-height:1.65;
+}
+
+
+/* Tablet */
+
+@media(max-width:900px){
+  .why-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+
+/* Mobile */
+
+@media(max-width:600px){
+  .why-grid{
+    grid-template-columns:1fr;
+  }
+
+  .why-card{
+    min-height:240px;
+  }
+}
+
+/* ---------- HERO PREMIUM DETAILS ---------- */
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:1px;
+  height:100%;
+  left:6vw;
+  top:0;
+  background:linear-gradient(
+    transparent,
+    rgba(255,255,255,.08) 35%,
+    transparent
+  );
+  z-index:3;
+  pointer-events:none;
+}
+
+.hero-content::before{
+  content:"";
+  width:45px;
+  height:1px;
+  background:var(--lime);
+  margin-bottom:-8px;
+  box-shadow:0 0 15px rgba(198,255,94,.5);
+}
+
+.hero-sub{
+  border-left:1px solid rgba(255,255,255,.12);
+  padding-left:16px;
+}
+
+/* ---------- PREMIUM MEMBERSHIP ---------- */
+
+.plan{
+  transition:
+    transform .45s cubic-bezier(.19,1,.22,1),
+    border-color .35s ease,
+    box-shadow .45s ease;
+}
+
+.plan:hover{
+  transform:translateY(-8px);
+}
+
+.plan.featured{
+  transform:translateY(-8px);
+}
+
+.plan.featured:hover{
+  transform:translateY(-14px);
+  box-shadow:
+    0 30px 80px -30px rgba(138,92,255,.55),
+    0 0 0 1px rgba(138,92,255,.25);
+}
+
+.plan.featured::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:12%;
+  right:12%;
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    var(--violet),
+    transparent
+  );
+}
+
+.plan-list li::before{
+  transition:transform .3s ease;
+}
+
+.plan:hover .plan-list li::before{
+  transform:scale(1.5);
+}
+
+/* ---------- STATS STRIP ---------- */
+
+.stats-strip{
+  margin:20px 6vw 80px;
+  padding:28px 35px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.015),
+    transparent
+  );
+}
+
+.stat-item{
+  text-align:center;
+  padding:10px;
+  border-right:1px solid var(--line);
+}
+
+.stat-item:last-child{
+  border-right:none;
+}
+
+.stat-item strong{
+  display:block;
+  font-family:'Space Grotesk';
+  font-size:30px;
+  margin-bottom:6px;
+}
+
+.stat-item span{
+  font-size:11px;
+  color:var(--grey);
+  letter-spacing:.05em;
+  text-transform:uppercase;
+}
+
+@media(max-width:640px){
+
+  .stats-strip{
+    margin:0 20px 60px;
+    padding:20px 10px;
+    grid-template-columns:repeat(2,1fr);
+    gap:0;
+  }
+
+  .stat-item{
+    border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    padding:18px 8px;
+  }
+
+  .stat-item:nth-child(2n){
+    border-right:none;
+  }
+
+  .stat-item:nth-child(n+3){
+    border-bottom:none;
+  }
+
+}
+
+@media (min-width:861px) and (max-width:1100px){
+
+  .nav{
+    width:94vw;
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .nav-links{
+    gap:18px;
+  }
+
+  .nav-links li a{
+    font-size:12px;
+  }
+
+  .nav{
+    gap:20px;
+  }
+
+}
+
+/* =========================================================
+   IROXX — PREMIUM BACKGROUND SYSTEM
+   ========================================================= */
+
+html{
+  background:#050608;
+}
+
+body{
+  background:
+    radial-gradient(
+      900px 600px at 72% 8%,
+      rgba(61,107,255,.12),
+      transparent 65%
+    ),
+    radial-gradient(
+      700px 500px at 15% 45%,
+      rgba(138,92,255,.055),
+      transparent 65%
+    ),
+    #050608;
+}
+
+/* Fine architectural grid */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9997;
+  pointer-events:none;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    );
+
+  background-size:70px 70px;
+
+  mask-image:linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0,0,0,.7) 40%,
+    transparent 100%
+  );
+
+  -webkit-mask-image:linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0,0,0,.7) 40%,
+    transparent 100%
+  );
+}
+
+/* Soft cinematic vignette */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9996;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      transparent 35%,
+      rgba(0,0,0,.45) 100%
+    );
+}
+
+/* Give sections depth instead of one flat black canvas */
+
+section:nth-of-type(even){
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.008),
+      rgba(61,107,255,.018),
+      rgba(255,255,255,.008)
+    );
+}
+
+section:nth-of-type(odd){
+  background:
+    radial-gradient(
+      700px 400px at 50% 50%,
+      rgba(61,107,255,.025),
+      transparent 75%
+    );
+}
+
+.hero{
+  background:
+    radial-gradient(
+      circle at 65% 48%,
+      rgba(61,107,255,.16),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 70% 52%,
+      rgba(138,92,255,.08),
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      #050608 0%,
+      #080b10 55%,
+      #050608 100%
+    );
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5,6,8,.95) 0%,
+      rgba(5,6,8,.65) 30%,
+      transparent 65%
+    ),
+    linear-gradient(
+      0deg,
+      #050608 0%,
+      transparent 25%
+    );
+
+  z-index:2;
+}
+
+/* =========================================================
+   PREMIUM PHOTO GALLERY
+   ========================================================= */
+
+.visual-gallery{
+  padding-top:100px;
+}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  grid-template-rows:300px 300px;
+  gap:14px;
+}
+
+.gallery-item{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#0b0d11;
+}
+
+.gallery-large{
+  grid-row:span 2;
+}
+
+.gallery-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+
+  filter:
+    grayscale(25%)
+    contrast(1.08)
+    brightness(.72);
+
+  transform:scale(1.01);
+
+  transition:
+    transform .8s cubic-bezier(.19,1,.22,1),
+    filter .6s ease;
+}
+
+.gallery-item:hover img{
+  transform:scale(1.07);
+
+  filter:
+    grayscale(0%)
+    contrast(1.05)
+    brightness(.82);
+}
+
+.gallery-item::after{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 35%,
+      rgba(0,0,0,.8) 100%
+    );
+
+  pointer-events:none;
+}
+
+.gallery-overlay{
+  position:absolute;
+  left:25px;
+  right:25px;
+  bottom:23px;
+  z-index:2;
+}
+
+.gallery-overlay span{
+  display:block;
+  font-family:'Space Grotesk';
+  font-size:9px;
+  letter-spacing:.14em;
+  color:var(--lime);
+  margin-bottom:7px;
+}
+
+.gallery-overlay strong{
+  font-family:'Space Grotesk';
+  font-size:20px;
+  font-weight:500;
+}
+
+
+/* Mobile */
+
+@media(max-width:700px){
+
+  .gallery-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:260px 220px 220px;
+  }
+
+  .gallery-large{
+    grid-row:auto;
+  }
+
+  .gallery-overlay{
+    left:18px;
+    bottom:18px;
+  }
+
+  .gallery-overlay strong{
+    font-size:17px;
+  }
+
+}
+
+
+/* =========================================================
+   PREMIUM BACKGROUND
+   ========================================================= */
+
+html{
+  background:#050608;
+}
+
+body{
+  background:
+    radial-gradient(
+      900px 600px at 72% 8%,
+      rgba(61,107,255,.12),
+      transparent 65%
+    ),
+    radial-gradient(
+      700px 500px at 15% 45%,
+      rgba(138,92,255,.055),
+      transparent 65%
+    ),
+    #050608;
+}
+
+/* Subtle architectural grid */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9997;
+  pointer-events:none;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.025) 1px,
+      transparent 1px
+    );
+
+  background-size:70px 70px;
+
+  mask-image:linear-gradient(
+    to bottom,
+    black,
+    transparent 90%
+  );
+
+  -webkit-mask-image:linear-gradient(
+    to bottom,
+    black,
+    transparent 90%
+  );
+}
+
+/* Cinematic vignette */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:9996;
+  pointer-events:none;
+
+  background:radial-gradient(
+    ellipse at center,
+    transparent 35%,
+    rgba(0,0,0,.42) 100%
+  );
+}
+
+/* =========================================================
+   HERO — IROXX EXTERIOR IMAGE
+   ========================================================= */
+
+/* =========================================================
+   HERO IMAGE — RESPONSIVE
+   ========================================================= */
+
+#hero-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+
+  object-fit:cover;
+  object-position:center center;
+
+  filter:
+    brightness(.58)
+    contrast(1.12)
+    saturate(.82);
+
+  transform:scale(1.03);
+
+  transition:
+    transform 1s ease,
+    object-position .5s ease,
+    filter .5s ease;
+}
+
+
+/* =========================================================
+   TABLET — 769px to 1100px
+   ========================================================= */
+
+@media (min-width:769px) and (max-width:1100px){
+
+  #hero-image{
+    object-position:62% center;
+    transform:scale(1.06);
+
+    filter:
+      brightness(.55)
+      contrast(1.1)
+      saturate(.8);
+  }
+
+}
+
+
+/* =========================================================
+   SMALL TABLETS — 601px to 768px
+   ========================================================= */
+
+@media (min-width:601px) and (max-width:768px){
+
+  #hero-image{
+    object-position:65% center;
+    transform:scale(1.1);
+
+    filter:
+      brightness(.52)
+      contrast(1.1)
+      saturate(.78);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE — up to 600px
+   ========================================================= */
+
+@media (max-width:600px){
+
+  #hero-image{
+    object-position:68% center;
+    transform:scale(1.13);
+
+    filter:
+      brightness(.48)
+      contrast(1.08)
+      saturate(.76);
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES — up to 390px
+   ========================================================= */
+
+@media (max-width:390px){
+
+  #hero-image{
+    object-position:72% center;
+    transform:scale(1.18);
+
+    filter:
+      brightness(.45)
+      contrast(1.08)
+      saturate(.72);
+  }
+
+}
+
+
+.hero-vignette{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(5,6,8,.94) 0%,
+      rgba(5,6,8,.72) 25%,
+      rgba(5,6,8,.30) 52%,
+      rgba(5,6,8,.08) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgba(5,6,8,.95) 0%,
+      rgba(5,6,8,.38) 28%,
+      transparent 65%
+    );
+}
+
+
+/* Tablet */
+
+@media (max-width:768px){
+
+  .hero-vignette{
+    background:
+      linear-gradient(
+        90deg,
+        rgba(5,6,8,.92) 0%,
+        rgba(5,6,8,.68) 45%,
+        rgba(5,6,8,.22) 100%
+      ),
+      linear-gradient(
+        0deg,
+        rgba(5,6,8,.96) 0%,
+        rgba(5,6,8,.55) 38%,
+        rgba(5,6,8,.08) 75%,
+        transparent 100%
+      );
+  }
+
+}
+
+
+/* Mobile */
+
+@media (max-width:600px){
+
+  .hero-vignette{
+    background:
+      linear-gradient(
+        180deg,
+        rgba(5,6,8,.20) 0%,
+        rgba(5,6,8,.18) 35%,
+        rgba(5,6,8,.72) 68%,
+        rgba(5,6,8,.97) 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(5,6,8,.72) 0%,
+        rgba(5,6,8,.28) 70%,
+        transparent 100%
+      );
+  }
+
+}
+
+
+/* Keep hero content above image */
+
+.hero-content{
+  position:relative;
+  z-index:3;
+}
+
+.scroll-cue{
+  position:relative;
+  z-index:3;
+}
+
+
+/* Mobile crop */
+
+@media(max-width:700px){
+
+  #hero-image{
+    object-position:58% center;
+    filter:
+      brightness(.52)
+      contrast(1.1)
+      saturate(.78);
+  }
+
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="brand">
+    <span class="brand-dot"></span>IROXX GYM
+  </div>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#standard">Standard</a></li>
+    <li><a href="#training">Training</a></li>
+    <li><a href="#facility">Facility</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#membership">Membership</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="tel:07208956510" class="nav-cta">Call Now</a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <img
+    id="hero-image"
+    src="images/iroxx-3.jpg"
+    alt="IROXX Gym exterior"
+  >
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="rating">4.8 ★</span> rated on Google · 66 reviews · Kamothe, Panvel
+    </div>
+    <h1 class="hero-title">
+      <span class="line"><span>REBUILD</span></span>
+      <span class="line"><span>THE STANDARD</span></span>
+    </h1>
+    <p class="hero-sub">A unisex training floor in Sector 12, Kamothe — modern equipment, trainers who actually coach, and a room built to keep you consistent.</p>
+    <div class="hero-actions">
+      <a href="#membership" class="btn-primary">Start Training →</a>
+      <a href="#facility" class="btn-ghost">See The Floor</a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><span class="bar"></span></div>
+</section>
+
+<section id="standard">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">01 — THE STANDARD</span>
+      <h2 class="reveal">What 66 people actually said, turned into numbers.</h2>
+    </div>
+    <p class="reveal">We didn't write this scorecard — our members did, one Google review at a time. Here's what keeps showing up.</p>
+  </div>
+
+  <div class="metrics-panel reveal">
+    <div class="metrics-grid">
+      <div class="metric">
+        <div class="metric-label">OVERALL RATING</div>
+        <div class="metric-value">4.8<span class="unit">/ 5</span></div>
+        <div class="metric-bar"><span data-w="96"></span></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">EQUIPMENT QUALITY</div>
+        <div class="metric-value">Modern<span class="unit">& maintained</span></div>
+        <div class="metric-bar"><span data-w="90"></span></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">TRAINER SUPPORT</div>
+        <div class="metric-value">Hands-on<span class="unit">coaching</span></div>
+        <div class="metric-bar"><span data-w="94"></span></div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">ATMOSPHERE</div>
+        <div class="metric-value">Unisex<span class="unit">& spacious</span></div>
+        <div class="metric-bar"><span data-w="88"></span></div>
+      </div>
+    </div>
+    <div class="tag-row">
+      <span class="tag">Mentioned in reviews — <b>supportive trainers</b> · 24</span>
+      <span class="tag">New machines · <b>6</b></span>
+      <span class="tag">Modern equipment · <b>4</b></span>
+      <span class="tag">Spacious gym · <b>2</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     WHY IROXX
+     ===================================================== -->
+
+<section id="why-iroxx">
+
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">02 — WHY IROXX</span>
+      <h2 class="reveal">
+        More than equipment.
+        Built around progress.
+      </h2>
+    </div>
+
+    <p class="reveal">
+      A training environment designed to make showing up easier,
+      training smarter and progressing consistently.
+    </p>
+  </div>
+
+  <div class="why-grid">
+
+    <div class="why-card reveal">
+      <span class="why-number">01</span>
+      <div class="why-icon">↗</div>
+      <h3>Progress First</h3>
+      <p>
+        Every session should move you forward. Train with
+        structure instead of simply spending time in the gym.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <span class="why-number">02</span>
+      <div class="why-icon">◎</div>
+      <h3>Real Coaching</h3>
+      <p>
+        Trainers who pay attention to technique, programming
+        and the details that actually matter.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <span class="why-number">03</span>
+      <div class="why-icon">◈</div>
+      <h3>Modern Floor</h3>
+      <p>
+        A carefully organised training floor with equipment
+        for strength, hypertrophy and conditioning.
+      </p>
+    </div>
+
+    <div class="why-card reveal">
+      <span class="why-number">04</span>
+      <div class="why-icon">+</div>
+      <h3>Built For Consistency</h3>
+      <p>
+        A comfortable environment where beginners and
+        experienced lifters can train without feeling out of place.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section id="training">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">02 — TRAINING</span>
+      <h2 class="reveal">One floor. Every kind of work.</h2>
+    </div>
+    <p class="reveal">Whether you're chasing a first pull-up or your tenth year of lifting, the equipment and the coaching scale with you.</p>
+  </div>
+  <div class="modules">
+    <div class="module reveal">
+      <span class="module-index">01</span>
+      <div><div class="module-name">Strength</div><div class="module-desc">Barbells, racks and free weights for progressive overload, with form correction from the floor trainers.</div></div>
+    </div>
+    <div class="module reveal">
+      <span class="module-index">02</span>
+      <div><div class="module-name">Hypertrophy</div><div class="module-desc">Machine and cable stations for isolated, high-volume work — built around the modern equipment reviewers keep mentioning.</div></div>
+    </div>
+    <div class="module reveal">
+      <span class="module-index">03</span>
+      <div><div class="module-name">Conditioning</div><div class="module-desc">Cardio and circuit zones for engine work, fat loss, and everything between.</div></div>
+    </div>
+    <div class="module reveal">
+      <span class="module-index">04</span>
+      <div><div class="module-name">Functional</div><div class="module-desc">Open floor space for mobility, kettlebells, and movement-based conditioning.</div></div>
+    </div>
+    <div class="module reveal">
+      <span class="module-index">05</span>
+      <div><div class="module-name">Personal Coaching</div><div class="module-desc">One-to-one guidance from trainers members describe as friendly, patient, and genuinely invested.</div></div>
+    </div>
+    <div class="module reveal">
+      <span class="module-index">06</span>
+      <div><div class="module-name">Trial Access</div><div class="module-desc">Try the floor before you commit — ask front desk about a short-term trial period.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     STATS STRIP
+     ===================================================== -->
+
+<div class="stats-strip">
+
+  <div class="stat-item">
+    <strong>66+</strong>
+    <span>Google Reviews</span>
+  </div>
+
+  <div class="stat-item">
+    <strong>4.8</strong>
+    <span>Average Rating</span>
+  </div>
+
+  <div class="stat-item">
+    <strong>6+</strong>
+    <span>Training Zones</span>
+  </div>
+
+  <div class="stat-item">
+    <strong>11 PM</strong>
+    <span>Closing Time</span>
+  </div>
+
+</div>
+
+<section id="facility">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">03 — THE FACILITY</span>
+      <h2 class="reveal">First floor, Landmark Building, Sector 12.</h2>
+    </div>
+    <p class="reveal">Clean, well-lit, and laid out so the floor never feels crowded — built to be comfortable whether it's your first visit or your five-hundredth.</p>
+  </div>
+  <div class="facility-strip">
+    <div class="zone reveal"><div class="zone-glyph">A</div><div class="zone-name">Free Weight Area</div><div class="zone-desc">Racks, plates and benches for barbell work.</div></div>
+    <div class="zone reveal"><div class="zone-glyph">B</div><div class="zone-name">Machine Floor</div><div class="zone-desc">Modern, well-maintained stations reviewers highlight most.</div></div>
+    <div class="zone reveal"><div class="zone-glyph">C</div><div class="zone-name">Cardio Deck</div><div class="zone-desc">Dedicated conditioning equipment.</div></div>
+    <div class="zone reveal"><div class="zone-glyph">D</div><div class="zone-name">Open Floor</div><div class="zone-desc">Space for mobility and functional training.</div></div>
+    <div class="zone reveal"><div class="zone-glyph">E</div><div class="zone-name">Front Desk</div><div class="zone-desc">Where trial sign-ups and plans start.</div></div>
+  </div>
+</section>
+
+<section class="visual-gallery">
+
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">05 — THE FLOOR</span>
+      <h2 class="reveal">Built to be trained in.</h2>
+    </div>
+
+    <p class="reveal">
+      A training floor designed around movement, strength and consistency.
+    </p>
+  </div>
+
+  <div class="gallery-grid">
+
+    <div class="gallery-item gallery-large reveal">
+      <img
+        src="images/iroxx-1.jpg"
+        alt="IROXX Gym training floor"
+        loading="lazy"
+      >
+      <div class="gallery-overlay">
+        <span>THE FLOOR</span>
+        <strong>Train with purpose.</strong>
+      </div>
+    </div>
+
+    <div class="gallery-item reveal">
+      <img
+        src="/images/iroxx-2.jpg"
+        alt="IROXX Gym equipment"
+        loading="lazy"
+      >
+      <div class="gallery-overlay">
+        <span>EQUIPMENT</span>
+        <strong>Every rep matters.</strong>
+      </div>
+    </div>
+
+    <div class="gallery-item reveal">
+      <img
+        src="images/iroxx-3.jpg"
+        alt="IROXX Gym training"
+        loading="lazy"
+      >
+      <div class="gallery-overlay">
+        <span>TRAINING</span>
+        <strong>Show up. Get stronger.</strong>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<section id="reviews">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">04 — MEMBERS</span>
+      <h2 class="reveal">In their own words.</h2>
+    </div>
+    <p class="reveal">A few of the 66 reviews on Google, summarised.</p>
+  </div>
+  <div class="testimonial-rail">
+    <div class="t-card reveal">
+      <div>
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">Trained here on a one-month trial and found the gym genuinely well-equipped and well-run — enough to make the case for signing up properly.</p>
+      </div>
+      <div class="t-foot"><div class="t-avatar">P</div><div><div class="t-name">Pratt</div><div class="t-role">Google review</div></div></div>
+    </div>
+    <div class="t-card reveal">
+      <div>
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">Praised the equipment and the staff for being consistently friendly and supportive, comparing it favourably to a gym she'd trained at for three years.</p>
+      </div>
+      <div class="t-foot"><div class="t-avatar">S</div><div><div class="t-name">Seema Yadav</div><div class="t-role">Local Guide · Google review</div></div></div>
+    </div>
+    <div class="t-card reveal">
+      <div>
+        <div class="t-stars">★★★★★</div>
+        <p class="t-text">Called out the modern, well-maintained equipment and a supportive environment as reasons it's become one of her favourite fitness decisions.</p>
+      </div>
+      <div class="t-foot"><div class="t-avatar">A</div><div><div class="t-name">Aditi Shinde</div><div class="t-role">Google review</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="membership">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">05 — MEMBERSHIP</span>
+      <h2 class="reveal">Plans built around how often you'll actually show up.</h2>
+    </div>
+    <p class="reveal">Pricing and terms are confirmed at the front desk — call ahead and a trainer will walk you through the right plan.</p>
+  </div>
+  <div class="plans">
+    <div class="plan reveal">
+      <div><div class="plan-name">Starter</div><div class="plan-note">For getting a consistent routine going.</div></div>
+      <ul class="plan-list">
+        <li>Full gym floor access</li>
+        <li>Standard operating hours</li>
+        <li>Orientation session</li>
+      </ul>
+      <a href="tel:07208956510" class="btn-ghost">Rs. 1000 per month </a>
+    </div>
+    <div class="plan featured reveal">
+      <div><div class="plan-name">Pro</div><div class="plan-note">Our most-chosen plan for regular training.</div></div>
+      <ul class="plan-list">
+        <li>Full gym floor access</li>
+        <li>Periodic trainer check-ins</li>
+        <li>Priority equipment slots</li>
+        <li>Guidance on programming</li>
+      </ul>
+      <a href="tel:07208956510" class="btn-primary">Rs. 2500 per month</a>
+    </div>
+    <div class="plan reveal">
+      <div><div class="plan-name">Coached</div><div class="plan-note">For members who want a dedicated trainer.</div></div>
+      <ul class="plan-list">
+        <li>Everything in Pro</li>
+        <li>One-to-one personal training</li>
+        <li>Custom programming</li>
+      </ul>
+      <a href="tel:07208956510" class="btn-ghost">Rs. 3500 per month</a>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom:0;">
+  <div class="section-head">
+    <div>
+      <span class="kicker reveal">06 — VISIT</span>
+      <h2 class="reveal">Find us in Sector 12.</h2>
+    </div>
+    <p class="reveal">First floor, Landmark Building — a short walk from the main Kamothe road.</p>
+  </div>
+  <div class="contact-grid reveal">
+    <div class="map-panel">
+      <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q=IROXX+GYM+Kamothe+Panvel&output=embed"></iframe>
+    </div>
+    <div class="info-panel">
+      <div class="info-row">
+        <div><div class="info-label">STATUS</div><span class="status-live"><span class="status-dot"></span>Open now · Closes 11 PM</span></div>
+      </div>
+      <div class="info-row">
+        <div><div class="info-label">ADDRESS</div><div class="info-value">First floor, Landmark Building, Plot No. 2 &amp; 2A, Sector 12, Kamothe, Panvel, Maharashtra 410209</div></div>
+      </div>
+      <div class="info-row">
+        <div><div class="info-label">PHONE</div><div class="info-value"><a href="tel:07208956510">072089 56510</a></div></div>
+      </div>
+      <div class="info-row">
+        <div><div class="info-label">RATING</div><div class="info-value">4.8 out of 5 · 66 Google reviews</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="final-orb"></div>
+  <h2>YOUR FIRST<br>SESSION<br>IS ONE CALL AWAY.</h2>
+  <p>No pressure, no hard sell — just a walk-through of the floor and a plan that fits your schedule.</p>
+  <a href="tel:07208956510" class="btn-primary">Call 072089 56510 →</a>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-brand">IROXX GYM</div>
+      <p class="footer-tag">Sector 12, Kamothe, Panvel — a unisex training floor built on modern equipment and coaching that shows up.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h4>EXPLORE</h4>
+        <a href="#standard">Standard</a>
+        <a href="#training">Training</a>
+        <a href="#facility">Facility</a>
+        <a href="#membership">Membership</a>
+      </div>
+      <div class="footer-col">
+        <h4>VISIT</h4>
+        <a href="tel:07208956510">072089 56510</a>
+        <a href="https://www.google.com/maps?q=IROXX+GYM+Kamothe+Panvel" target="_blank" rel="noopener">Get Directions</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 IROXX GYM, Kamothe</span>
+    <span>Sector 12, Panvel, Maharashtra 410209</span>
+  </div>
+</footer>
+
+<script>
+// ---------- Nav scroll state ----------
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive:true });
+
+// ---------- Reveal on scroll ----------
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.18 });
+reveals.forEach(el => io.observe(el));
+
+// ---------- Animate metric bars when panel is visible ----------
+const bars = document.querySelectorAll('.metric-bar span');
+const barIO = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      bars.forEach(b => b.style.width = b.dataset.w + '%');
+      barIO.disconnect();
+    }
+  });
+}, { threshold: 0.4 });
+if (document.querySelector('.metrics-panel')) barIO.observe(document.querySelector('.metrics-panel'));
+
+// ---------- Hero WebGL particle field ----------
+(function(){
+  const canvas = document.getElementById('hero-canvas');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.z = 9;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  // Particle "human silhouette" — points arranged in a rough standing figure volume
+  const COUNT = 3800;
+  const positions = new Float32Array(COUNT * 3);
+  const basePositions = new Float32Array(COUNT * 3);
+
+  function randInFigure(){
+    // sample a rough humanoid silhouette using stacked ellipsoidal bands
+    const bands = [
+      {cy: 3.1, ry:0.55, rx:0.55, w:0.55}, // head
+      {cy: 2.2, ry:0.9,  rx:1.5,  w:1.0},  // shoulders/chest
+      {cy: 0.9, ry:1.3,  rx:1.05, w:0.9},  // torso
+      {cy: -0.6, ry:1.2, rx:0.85, w:0.55}, // hips
+      {cy: -2.4, ry:1.6, rx:0.55, w:0.55}, // legs
+    ];
+    const b = bands[Math.floor(Math.random()*bands.length)];
+    const theta = Math.random()*Math.PI*2;
+    const r = Math.pow(Math.random(),0.5);
+    const x = Math.cos(theta)*r*b.rx*b.w*2.1;
+    const y = b.cy + (Math.random()-0.5)*b.ry*1.6;
+    const z = Math.sin(theta)*r*0.7;
+    return [x*0.62, y*0.62, z*0.62];
+  }
+
+  for (let i=0;i<COUNT;i++){
+    const [x,y,z] = randInFigure();
+    positions[i*3]=x; positions[i*3+1]=y; positions[i*3+2]=z;
+    basePositions[i*3]=x; basePositions[i*3+1]=y; basePositions[i*3+2]=z;
+  }
+
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
+
+  const colorA = new THREE.Color(0x3d6bff);
+  const colorB = new THREE.Color(0x8a5cff);
+  const colorC = new THREE.Color(0xc6ff5e);
+  const colors = new Float32Array(COUNT*3);
+  for (let i=0;i<COUNT;i++){
+    const t = Math.random();
+    const c = t < 0.55 ? colorA : (t < 0.9 ? colorB : colorC);
+    colors[i*3]=c.r; colors[i*3+1]=c.g; colors[i*3+2]=c.b;
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+
+  const mat = new THREE.PointsMaterial({
+    size:0.035, vertexColors:true, transparent:true, opacity:0.85,
+    depthWrite:false, blending:THREE.AdditiveBlending
+  });
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // faint core glow sphere behind figure
+  const glowGeo = new THREE.SphereGeometry(2.4, 32, 32);
+  const glowMat = new THREE.MeshBasicMaterial({ color:0x3d6bff, transparent:true, opacity:0.05 });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  glow.position.y = 0.4;
+  scene.add(glow);
+
+  let mouseX = 0, mouseY = 0, targetRotY = 0, targetRotX = 0;
+  window.addEventListener('mousemove', (e)=>{
+    mouseX = (e.clientX/window.innerWidth - 0.5);
+    mouseY = (e.clientY/window.innerHeight - 0.5);
+  }, { passive:true });
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.0045;
+    targetRotY += (mouseX*0.6 - targetRotY)*0.04;
+    targetRotX += (-mouseY*0.25 - targetRotX)*0.04;
+    points.rotation.y = 0.4 + targetRotY + (reduceMotion?0:Math.sin(t*0.5)*0.03);
+    points.rotation.x = targetRotX;
+    glow.rotation.y = points.rotation.y;
+
+    if (!reduceMotion){
+      const pos = geo.attributes.position.array;
+      for (let i=0;i<COUNT;i+=3){
+        const idx=i*3;
+        pos[idx+1] = basePositions[idx+1] + Math.sin(t*1.4 + basePositions[idx]*3)*0.02;
+      }
+      geo.attributes.position.needsUpdate = true;
+    }
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ---------- Mobile Navigation ----------
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+
+menuToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
+});
+
+// Close menu after clicking a navigation link
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+  });
+});
+
+// ---------- Premium cursor lighting ----------
+
+if (window.matchMedia('(pointer:fine)').matches) {
+
+  document.addEventListener('mousemove', (e) => {
+
+    document.documentElement.style.setProperty(
+      '--mouse-x',
+      e.clientX + 'px'
+    );
+
+    document.documentElement.style.setProperty(
+      '--mouse-y',
+      e.clientY + 'px'
+    );
+
+    const card = e.target.closest(
+      '.module, .plan, .t-card, .zone, .why-card'
+    );
+
+    if (card) {
+
+      const rect = card.getBoundingClientRect();
+
+      card.style.setProperty(
+        '--card-x',
+        ((e.clientX - rect.left) / rect.width * 100) + '%'
+      );
+
+      card.style.setProperty(
+        '--card-y',
+        ((e.clientY - rect.top) / rect.height * 100) + '%'
+      );
+
+    }
+
+  }, {passive:true});
+
+}
+
+</script>
+
+<!-- MOBILE ACTION BAR -->
+
+<div class="mobile-action-bar">
+
+  <a href="tel:07208956510" class="mobile-call">
+    <span>CALL</span>
+    <strong>072089 56510</strong>
+  </a>
+
+  <a href="#membership" class="mobile-join">
+    JOIN IROXX →
+  </a>
+
+</div>
+</body>
+</html>
